@@ -18,3 +18,11 @@ target_link_libraries(dijkstra
 	MishMesh
 	igl::core igl::opengl_glfw
 )
+
+add_executable(cone_singularities
+	cone_singularities.cpp
+)
+target_link_libraries(cone_singularities
+	MishMesh
+	igl::core igl::opengl_glfw
+)
