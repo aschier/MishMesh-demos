@@ -26,3 +26,11 @@ target_link_libraries(cone_singularities
 	MishMesh
 	igl::core igl::opengl_glfw igl::opengl_glfw_imgui
 )
+
+add_executable(geodesics
+	geodesics.cpp
+)
+target_link_libraries(geodesics
+	MishMesh
+	igl::core igl::opengl_glfw
+)
