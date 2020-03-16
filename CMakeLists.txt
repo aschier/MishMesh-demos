@@ -24,5 +24,5 @@ add_executable(cone_singularities
 )
 target_link_libraries(cone_singularities
 	MishMesh
-	igl::core igl::opengl_glfw
+	igl::core igl::opengl_glfw igl::opengl_glfw_imgui
 )
