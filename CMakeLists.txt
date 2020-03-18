@@ -6,6 +6,7 @@ set(MSVC_RUNTIME "dynamic")
 
 option(LIBIGL_WITH_OPENGL            "Use OpenGL"         ON)
 option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           ON)
+option(LIBIGL_WITH_OPENGL_GLFW_IMGUI "Use IMGUI"          ON)
 
 find_package(Eigen3 REQUIRED QUIET)
 find_package(MishMesh REQUIRED QUIET)
@@ -32,5 +33,5 @@ add_executable(geodesics
 )
 target_link_libraries(geodesics
 	MishMesh
-	igl::core igl::opengl_glfw
+	igl::core igl::opengl_glfw igl::opengl_glfw_imgui
 )
