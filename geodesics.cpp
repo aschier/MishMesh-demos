@@ -17,9 +17,21 @@
 uint left_view, right_view;
 uint left_mesh, right_mesh;
 
-enum GeodesicType { NOVOTNI = 0, MMP = 1, HEAT = 2 };
+enum GeodesicType {
+	NOVOTNI,
+	MMP,
+	HEAT,
+};
+
 const static std::vector<std::string> Methods{"Novotni", "MMP", "Heat"};
 static int method_idx = 0;
+
+enum SecondViewMode {
+	Distance,
+	MMP_Difference,
+};
+
+static int second_view_mode = 0;
 
 igl::opengl::glfw::imgui::ImGuiMenu create_menu() {
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
@@ -29,6 +41,10 @@ igl::opengl::glfw::imgui::ImGuiMenu create_menu() {
 			if(ImGui::Combo("Method", &method_idx, choices)) {
 			}
 		}
+		ImGui::Text("Second View:");
+		ImGui::RadioButton("Distances", &second_view_mode, SecondViewMode::Distance);
+		ImGui::SameLine();
+		ImGui::RadioButton("Difference to MMP", &second_view_mode, SecondViewMode::MMP_Difference);
 	};
 
 	return menu;
@@ -73,7 +89,19 @@ void visualize_geodesics(const Eigen::MatrixX3d &V, const Eigen::MatrixX3i &F, M
 	colors /= 255.0;
 	viewer.data(left_mesh).set_colors(colors);
 
-	MishMesh::colorize_mesh(mesh, distanceProperty);
+	if(second_view_mode == SecondViewMode::Distance) {
+		MishMesh::colorize_mesh(mesh, distanceProperty);
+	} else if(second_view_mode == SecondViewMode::MMP_Difference) {
+		MishMesh::GeodesicDistanceProperty distanceProperty2;
+		mesh.add_property(distanceProperty2);
+		mmp_distances(V, F, mesh, vh, distanceProperty2);
+		for(auto vh : mesh.vertices()) {
+			mesh.property(distanceProperty, vh) = std::abs(mesh.property(distanceProperty, vh) - mesh.property(distanceProperty2, vh));
+		}
+		mesh.remove_property(distanceProperty2);
+		MishMesh::colorize_mesh(mesh, distanceProperty);
+	}
+
 	for(int i = 0; i < mesh.n_vertices(); i++) {
 		colors.row(i) = Eigen::RowVector3d(OpenMesh::Vec3d(mesh.color(mesh.vertex_handle(i))).data());
 	}
