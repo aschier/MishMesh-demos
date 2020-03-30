@@ -34,17 +34,6 @@ void visualize_cones_and_mst(igl::opengl::glfw::Viewer &viewer, MishMesh::TriMes
 	viewer.data().add_edges(P1, P2, Eigen::RowVector3d{0, 0, 1});
 }
 
-MishMesh::TriMesh::VertexHandle get_vh(const MishMesh::TriMesh &mesh, MishMesh::TriMesh::FaceHandle fh, Eigen::Vector3f bc) {
-	auto vhs = MishMesh::face_vertices(mesh, fh);
-	if(bc[0] >= 1 / 3.) {
-		return vhs[0];
-	} else if(bc[1] > 1 / 3.){
-		return vhs[1];
-	} else {
-		return vhs[2];
-	}
-}
-
 int main(int argc, char *argv[]) {
 	MishMesh::TriMesh mesh;
 	OpenMesh::IO::read_mesh(mesh, argv[1]);
@@ -126,10 +115,10 @@ int main(int argc, char *argv[]) {
 			double y = viewer.core().viewport(3) - viewer.current_mouse_y;
 
 			int face_id;
-			Eigen::Vector3f bc;
+			Eigen::Vector3d bc;
 			if(igl::unproject_onto_mesh({x, y}, viewer.core().view, viewer.core().proj, viewer.core().viewport, V, F, face_id, bc)) {
 				auto fh = mesh.face_handle(face_id);
-				auto vh = get_vh(mesh, fh, bc);
+				auto vh = MishMesh::nearest_vh(mesh, fh, bc);
 				cone_singularities.push_back(vh);
 				visualize_cones_and_mst(viewer, mesh, cone_singularities);
 				return true;
