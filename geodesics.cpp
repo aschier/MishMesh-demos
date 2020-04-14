@@ -96,7 +96,8 @@ void visualize_geodesics(const Eigen::MatrixX3d &V, const Eigen::MatrixX3i &F, M
 		mesh.add_property(distanceProperty2);
 		mmp_distances(V, F, mesh, vh, distanceProperty2);
 		for(auto vh : mesh.vertices()) {
-			mesh.property(distanceProperty, vh) = std::abs(mesh.property(distanceProperty, vh) - mesh.property(distanceProperty2, vh));
+			std::cerr << (mesh.property(distanceProperty, vh) - mesh.property(distanceProperty2, vh)) << std::endl;
+			mesh.property(distanceProperty, vh) = (mesh.property(distanceProperty, vh) - mesh.property(distanceProperty2, vh));
 		}
 		mesh.remove_property(distanceProperty2);
 		MishMesh::colorize_mesh(mesh, distanceProperty);

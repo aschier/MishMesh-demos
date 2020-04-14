@@ -48,7 +48,7 @@ bool mouse_down(igl::opengl::glfw::Viewer &viewer, int button, int modifier, con
 			viewer.data().add_points(point, Eigen::RowVector3d(0, 0, 1));
 		}
 		if(dijkstraPoints.source_vh.is_valid() && dijkstraPoints.target_vh.is_valid()) {
-			auto result = MishMesh::dijkstra(dijkstraPoints.source_vh, dijkstraPoints.target_vh, mesh);
+			auto result = MishMesh::dijkstra<MishMesh::TriMesh, MishMesh::L2HeuristicComparator<>>(dijkstraPoints.source_vh, dijkstraPoints.target_vh, mesh);
 			Eigen::MatrixX3d colors(result.edges.size(), 3);
 			Eigen::MatrixX3d P1(result.edges.size(), 3);
 			Eigen::MatrixX3d P2(result.edges.size(), 3);
