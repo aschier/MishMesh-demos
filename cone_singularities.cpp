@@ -6,9 +6,9 @@
 #include <MishMesh/minimum_spanning_tree.h>
 
 #include <igl/opengl/glfw/Viewer.h>
+#include <igl/opengl/glfw/imgui/ImGuiPlugin.h>
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
-#include <imgui/imgui.h>
 #include <igl/unproject_onto_mesh.h>
 
 void visualize_cones_and_mst(igl::opengl::glfw::Viewer &viewer, MishMesh::TriMesh &mesh, std::vector<MishMesh::TriMesh::VertexHandle> &cone_singularities) {
@@ -59,8 +59,10 @@ int main(int argc, char *argv[]) {
 	auto cone_singularities = MishMesh::cone_singularities::compute_cone_singularities(mesh, solver, 0.0, iterations, cone_addition_mode);
 	visualize_cones_and_mst(viewer, mesh, cone_singularities);
 
+ 	igl::opengl::glfw::imgui::ImGuiPlugin plugin;
 	igl::opengl::glfw::imgui::ImGuiMenu menu;
-	viewer.plugins.push_back(&menu);
+	plugin.widgets.push_back(&menu);
+	viewer.plugins.push_back(&plugin);
 
 	int cone_addition_mode_idx = 1;
 	menu.callback_draw_viewer_menu = [&]() {

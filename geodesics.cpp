@@ -10,7 +10,6 @@
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/unproject_onto_mesh.h>
-#include <imgui/imgui.h>
 
 #include <igl/exact_geodesic.h>
 
@@ -161,8 +160,10 @@ int main(int argc, char *argv[]) {
 
 	igl::opengl::glfw::Viewer viewer;
 
+	igl::opengl::glfw::imgui::ImGuiPlugin plugin;
 	igl::opengl::glfw::imgui::ImGuiMenu menu = create_menu();
-	viewer.plugins.push_back(&menu);
+	plugin.widgets.push_back(&menu);
+	viewer.plugins.push_back(&plugin);
 
 	left_mesh = viewer.data().id;
 	setup_viewer(viewer, left_mesh, V, F);
